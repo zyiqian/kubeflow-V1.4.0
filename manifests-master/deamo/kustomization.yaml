@@ -1,0 +1,145 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+# Cert-Manager
+- ../common/cert-manager/cert-manager/base
+- ../common/cert-manager/kubeflow-issuer/base
+# Istio
+- ../common/istio-1-9/istio-crds/base
+- ../common/istio-1-9/istio-namespace/base
+- ../common/istio-1-9/istio-install/base
+# OIDC Authservice
+#- ../common/oidc-authservice/base
+# Dex
+#- ../common/dex/overlays/istio
+# KNative
+#- ../common/knative/knative-serving/overlays/gateways
+#- ../common/knative/knative-eventing/base
+#- ../common/istio-1-9/cluster-local-gateway/base
+# Kubeflow namespace
+- ../common/kubeflow-namespace/base
+# Kubeflow Roles
+- ../common/kubeflow-roles/base
+# Kubeflow Istio Resources
+- ../common/istio-1-9/kubeflow-istio-resources/base
+
+
+# Kubeflow Pipelines
+#- ../apps/pipeline/upstream/env/platform-agnostic-multi-user
+- ../apps/pipeline/upstream/env/dev
+# KFServing
+#- ../apps/kfserving/upstream/overlays/kubeflow
+# Katib
+- ../apps/katib/upstream/installs/katib-with-kubeflow
+# Central Dashboard
+- ../apps/centraldashboard/upstream/overlays/istio
+# Admission Webhook
+- ../apps/admission-webhook/upstream/overlays/cert-manager
+# Notebook Controller
+- ../apps/jupyter/jupyter-web-app/upstream/overlays/istio
+# Jupyter Web App
+- ../apps/jupyter/notebook-controller/upstream/overlays/kubeflow
+# Profiles + KFAM
+- ../apps/profiles/upstream/overlays/kubeflow
+# Volumes Web App
+- ../apps/volumes-web-app/upstream/overlays/istio
+# Tensorboards Controller
+-  ../apps/tensorboard/tensorboard-controller/upstream/overlays/kubeflow
+# Tensorboard Web App
+-  ../apps/tensorboard/tensorboards-web-app/upstream/overlays/istio
+# Training Operator
+- ../apps/training-operator/upstream/overlays/kubeflow
+# MPI Operator
+- ../apps/mpi-job/upstream/overlays/kubeflow
+# User namespace
+#- ../common/user-namespace/base
+
+images:
+- name: gcr.io/ml-pipeline/minio
+  newName: goodpp/ml-pipeline-minio
+  newTag: RELEASE.2019-08-14T20-37-41Z-license-compliance
+- name: gcr.io/ml-pipeline/cache-deployer
+  newName: goodpp/ml-pipeline-cache-deployer
+  newTag: 1.7.0
+- name: gcr.io/ml-pipeline/cache-server
+  newName: goodpp/ml-pipeline-cache-server
+  newTag: 1.7.0
+- name: gcr.io/kubebuilder/kube-rbac-proxy
+  newName: goodpp/kubebuilder-kube-rbac-proxy
+  newTag: v0.4.0
+- name: gcr.io/ml-pipeline/metadata-envoy
+  newName: goodpp/ml-pipeline-metadata-envoy
+  newTag: 1.7.0
+- name: gcr.io/tfx-oss-public/ml_metadata_store_server
+  newName:  goodpp/top_ml_metadata_store_server
+  newTag: 1.0.0
+- name: gcr.io/ml-pipeline/metadata-writer
+  newName:  goodpp/ml-pipeline-metadata-writer
+  newTag: 1.7.0
+- name: gcr.io/ml-pipeline/api-server
+  newName: goodpp/ml-pipeline-api-server
+  newTag: 1.7.0
+- name: gcr.io/ml-pipeline/persistenceagent
+  newName: goodpp/ml-pipeline-persistenceagent
+  newTag: 1.7.0
+- name: gcr.io/ml-pipeline/scheduledworkflow
+  newName: goodpp/ml-pipeline-scheduledworkflow
+  newTag: 1.7.0
+- name: gcr.io/ml-pipeline/frontend
+  newName: goodpp/ml-pipeline-frontend
+  newTag: 1.7.0
+- name: gcr.io/ml-pipeline/viewer-crd-controller
+  newName: goodpp/ml-pipeline-viewer-crd-controller
+  newTag: 1.7.0
+- name: gcr.io/ml-pipeline/visualization-server
+  newName: goodpp/ml-pipeline-visualization-server
+  newTag: 1.7.0
+- name: gcr.io/ml-pipeline/mysql
+  newName: goodpp/ml-pipeline-mysql
+  newTag: "5.7"
+- name: gcr.io/kubebuilder/kube-rbac-proxy
+  newName: goodpp/kubebuilder-kube-rbac-proxy
+  newTag: v0.4.0
+- name: gcr.io/ml-pipeline/workflow-controller
+  newName: goodpp/ml-pipeline-workflow-controller
+  newTag: v3.1.6-patch-license-compliance
+- name: gcr.io/ml-pipeline/inverse-proxy-agent
+  newName: goodpp/ml-pipeline-inverse-proxy-agent
+  newTag: 1.7.0
+- name: gcr.io/ml-pipeline/application-crd-controller
+  newName: goodpp/ml-pipeline-application-crd-controller
+  newTag: 1.0-beta-non-cluster-role
+
+- name: public.ecr.aws/j1r0q0g6/notebooks/notebook-controller
+  newName: goodpp/notebook-controller
+  newTag: v1.4
+- name: public.ecr.aws/j1r0q0g6/notebooks/admission-webhook
+  newName: goodpp/admission-webhook
+  newTag: v1.4
+- name: public.ecr.aws/j1r0q0g6/notebooks/central-dashboard
+  newName: goodpp/central-dashboard
+  newTag: v1.4
+- name: public.ecr.aws/j1r0q0g6/notebooks/jupyter-web-app
+  newName: goodpp/jupyter-web-app
+  newTag: v1.4
+- name: public.ecr.aws/j1r0q0g6/notebooks/access-management
+  newName: goodpp/access-management
+  newTag: v1.4
+- name: public.ecr.aws/j1r0q0g6/notebooks/profile-controller
+  newName: goodpp/profile-controller
+  newTag: v1.4
+- name: public.ecr.aws/j1r0q0g6/notebooks/tensorboard-controller
+  newName: goodpp/tensorboard-controller
+  newTag: v1.4
+- name: public.ecr.aws/j1r0q0g6/notebooks/tensorboards-web-app
+  newName: goodpp/tensorboards-web-app
+  newTag: v1.4
+- name: public.ecr.aws/j1r0q0g6/training/training-operator
+  newName: goodpp/training-operator
+  newTag: 760ac1171dd30039a7363ffa03c77454bd714da5
+- name: public.ecr.aws/j1r0q0g6/notebooks/volumes-web-app
+  newName: goodpp/volumes-web-app
+  newTag: v1.4
+
+
